@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\ProductCategory;
 class ProductCategoryController extends Controller
 {
     /**
@@ -13,7 +13,9 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        //
+        $category = ProductCategory::all();
+
+        return $category;
     }
 
     /**
@@ -34,7 +36,9 @@ class ProductCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $category = ProductCategory::create($request->all());
+
+        return response()->json($category,201);
     }
 
     /**
@@ -45,7 +49,9 @@ class ProductCategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $category = ProductCategory::findOrFail($id);
+
+        return $category;
     }
 
     /**
@@ -68,7 +74,10 @@ class ProductCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $category = ProductCategory::findOrFail($id);
+        $category->update($request->all());
+
+        return response()->json($category, 200);
     }
 
     /**
@@ -79,6 +88,9 @@ class ProductCategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $category = ProductCategory::findOrFail($id);
+        $category->delete();
+
+        return response()->json(null, 204);
     }
 }

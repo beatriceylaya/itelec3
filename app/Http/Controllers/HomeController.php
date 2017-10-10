@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\User;
+use Auth;
 class HomeController extends Controller
 {
     /**
@@ -23,6 +24,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $uid = Auth::id();
+        $user = User::find($uid);
+        $userToken = $user->api_token;
+        return view('welcome', compact('userToken'));
     }
 }

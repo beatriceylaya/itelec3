@@ -11,8 +11,20 @@ class SuppliersProductTableSeeder extends Seeder
      */
     public function run()
     {
-        SuppliersProduct::create(['supp_id' => ,
-        					      'prod_id' =>,
-        					      'status' =>]);
+        SuppliersProduct::create(['supp_id' => 1,
+        					      'prod_id' => 1,
+        					      'status' => 'active']);
+        SuppliersProduct::create(['supp_id' => 2,
+                                  'prod_id' => 3,
+                                  'status' => 'active']);
+        SuppliersProduct::create(['supp_id' => 3,
+                                  'prod_id' => 2,
+                                  'status' => 'active']);
+        SuppliersProduct::create(['supp_id' => 4,
+                                  'prod_id' => 4,
+                                  'status' => 'active']);
+        SuppliersProduct::create(['supp_id' => 5,
+                                  'prod_id' => 5,
+                                  'status' => 'active']);
     }
 }
