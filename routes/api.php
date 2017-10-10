@@ -35,3 +35,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('products/category/{id}', 'ProductCategoryController@update');
     Route::delete('products/category/{id}', 'ProductCategoryController@delete');
 });
+
+Route::group(['prefix' => 'soap'], function () {
+    Route::any('/getAccount','Soap\ClientController@client');
+    Route::get('/suppliers','Soap\ClientController@getSuppliers');
+    Route::get('/products','Soap\ClientController@getProducts');
+
+});
