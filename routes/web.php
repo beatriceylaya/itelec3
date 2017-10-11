@@ -86,7 +86,7 @@ Route::any('/', function() {
 		    // method name:
 		    'getAllSuppliers',
 		    // parameter list:
-		    array(),
+		    array('_token' => 'xsd:string'),
 		    // return value(s):
 		    array('result'=>'xsd:string'),
 		    // namespace:
@@ -104,7 +104,7 @@ Route::any('/', function() {
 		    // method name:
 		    'getAllProducts',
 		    // parameter list:
-		    array(),
+		    array('_token' => 'xsd:string'),
 		    // return value(s):
 		    array('result'=>'xsd:string'),
 		    // namespace:
@@ -170,6 +170,7 @@ Route::any('/', function() {
  		Header('Content-type: text/xml');
 		return $xml->asXML();
  	}
+
 
 	    $rawPostData = file_get_contents("php://input");
 	    return \Response::make($server->service($rawPostData), 200, array('Content-Type' => 'text/xml; charset=ISO-8859-1'));
