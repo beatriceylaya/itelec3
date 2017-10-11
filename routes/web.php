@@ -2,6 +2,8 @@
 
 use App\Supplier;
 use App\Product;
+use App\User;
+use App\ProductCategory;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -118,6 +120,24 @@ Route::any('/', function() {
 		    'Get all Suppliers'
     );
 
+	$server->register(
+		    // method name:
+		    'getAllProductCategory',
+		    // parameter list:
+		    array('_token' => 'xsd:string'),
+		    // return value(s):
+		    array('result'=>'xsd:string'),
+		    // namespace:
+		    url('/'),
+		    // soapaction: (use default)
+		    false,
+		    // style: rpc or document
+		    'rpc',
+		    // use: encoded or literal
+		    'encoded',
+		    'Get all Suppliers'
+    );
+
 	function getAccount($id)
 	{
 		$xml = new SimpleXMLElement('<xml/>');
@@ -144,34 +164,99 @@ Route::any('/', function() {
 	    return $result;
 	}
 
-	function getAllSuppliers(){
+	function getAllSuppliers($_token){
 
+		$exists = User::where("api_token",$_token)->get();
+		if(count($exists) > 0)
+		{
 		$xml = new SimpleXMLElement('<xml/>');
-		$suppliers = Supplier::all();
+		$suppliers = Supplier::where('status','active')->get();
+		$xml->addChild('message','Successfully retrieved all suppliers');
+		$xml->addChild('status','Successful');
 		foreach($suppliers as $supplier)
 		{
 			$track = $xml->addChild('supplier');
 			$track->addChild('id',$supplier->id);
 			$track->addChild('supplier_name',$supplier->supplier_name);
+			$track->addChild('supplier_email',$supplier->email);
+			$track->addChild('contact_person', $supplier->contact_person);
+			$track->addChild('address', $supplier->address);
 		}
  		Header('Content-type: text/xml');
 		return $xml->asXML();
+		}
+		else {
+		$xml = new SimpleXMLElement('<xml/>');
+		$xml->addChild("supplier",null);
+		$xml->addChild('message','Invalid api token');
+		$xml->addChild('status','Error');
+		Header('Content-type: text/xml');
+		return $xml->asXML();	
+		}
  	}
 
- 	function getAllProducts(){
+ 	function getAllProducts($_token){
+
+ 		$exists = User::where("api_token",$_token)->get();
+		if(count($exists) > 0)
+		{
 		$xml = new SimpleXMLElement('<xml/>');
+		$xml->addChild('message','Successfully retrieved all products');
+		$xml->addChild('status','Successful');
 		$products = Product::all();
 		foreach($products as $product)
 		{
 			$track = $xml->addChild('product');
 			$track->addChild('id',$product->id);
-			$track->addChild('supplier_name',$product->prod_name);
+			$track->addChild('product_name',$product->prod_name);
+			$track->addChild('product_description', $product->prod_desc);
+			$track->addChild('unit_price',$product->unit_price);
+			$track->addChild('reorder_qty',$product->reorder_qty);
+			$productCat = $product->category;
+			$track2 = $track->addChild('category');
+			$track2->addChild('id',$productCat->id);
+			$track2->addChild('category_name',$productCat->category_name);
 		}
  		Header('Content-type: text/xml');
 		return $xml->asXML();
+		}
+		else {
+		$xml = new SimpleXMLElement('<xml/>');
+		$xml->addChild("supplier",null);
+		$xml->addChild('message','Invalid api token');
+		$xml->addChild('status','Error');
+		Header('Content-type: text/xml');
+		return $xml->asXML();	
+		}
+
  	}
 
+        function getAllProductCategory($_token) 
+        {
+        $exists = User::where("api_token",$_token)->get();
+        if(count($exists) > 0)
+        {
+        $xml = new SimpleXMLElement('<xml/>');
+		$xml->addChild('message','Successfully retrieved all product categories');
+		$xml->addChild('status','Successful');
+		$prodCats = ProductCategory::all(); 
+        foreach($prodCats  as $prodCat)
+        {
+                $track = $xml->addChild('category');
+                $track->addChild('id',$prodCat->id);
+                $track->addChild('category_name',$prodCat->category_name);
 
+        }
+        Header('Content-type: text/xml');
+		return $xml->asXML();
+        }
+        else
+        {
+        Header('Content-type: text/xml');
+		return $xml->asXML();
+		}
+        }
+        
 	    $rawPostData = file_get_contents("php://input");
 	    return \Response::make($server->service($rawPostData), 200, array('Content-Type' => 'text/xml; charset=ISO-8859-1'));
  	
