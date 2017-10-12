@@ -40,7 +40,7 @@ Route::any('/', function() {
             // use: encoded or literal
             'encoded',
             // description: documentation for the method
-            'Simple Hello World Method'
+            'Simple Hello World Method'	
     );
  
 	//Create a complex type
@@ -312,8 +312,6 @@ Route::any('/', function() {
 		return $xml->asXML();
 		}
     }
-
-
 
 	    $rawPostData = file_get_contents("php://input");
 	    return \Response::make($server->service($rawPostData), 200, array('Content-Type' => 'text/xml; charset=ISO-8859-1'));

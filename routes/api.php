@@ -40,7 +40,14 @@ Route::group(['prefix' => 'soap'], function () {
     Route::any('/getAccount','Soap\ClientController@client');
     Route::get('/suppliers','Soap\ClientController@getSuppliers');
     Route::get('/products','Soap\ClientController@getProducts');
+
+    // product?name=
+    Route::get('/product','Soap\ClientController@getProductFromName');
     Route::get('/product_categories','Soap\ClientController@getProductCategories');
     Route::get('/suppliers_product','Soap\ClientController@getSupplierProducts');
+
+    //get products from the category name eg. /products/category='Milk'
+    Route::get('/products/category','Soap\ClientController@getProductsFromCategory');
+    Route::get('/{category}/products','Soap\ClientController@getProductsFromCategory');
 
 });
