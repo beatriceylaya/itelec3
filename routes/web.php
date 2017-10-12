@@ -153,9 +153,45 @@ Route::any('/', function() {
 		    'rpc',
 		    // use: encoded or literal
 		    'encoded',
-		    'Get all Suppliers'
+		    'Get all products given a suppler id'
     );
 
+
+	$server->register(
+		    // method name:
+		    'getProductsOfCats',
+		    // parameter list:
+		    array('_token' => 'xsd:string','name' => 'xsd:string'),
+		    // return value(s):
+		    array('result'=>'xsd:string'),
+		    // namespace:
+		    url('/'),
+		    // soapaction: (use default)
+		    false,
+		    // style: rpc or document
+		    'rpc',
+		    // use: encoded or literal
+		    'encoded',
+		    'Get all Products given a category name'
+    );
+
+	$server->register(
+		    // method name:
+		    'getProductsOfCat',
+		    // parameter list:
+		    array('_token' => 'xsd:string','id' => 'xsd:string'),
+		    // return value(s):
+		    array('result'=>'xsd:string'),
+		    // namespace:
+		    url('/'),
+		    // soapaction: (use default)
+		    false,
+		    // style: rpc or document
+		    'rpc',
+		    // use: encoded or literal
+		    'encoded',
+		    'Get all Products given a category id'
+    );
 	function getAccount($id)
 	{
 		$xml = new SimpleXMLElement('<xml/>');
@@ -276,7 +312,7 @@ Route::any('/', function() {
     }
       
     function getProductFromSupplier($_token, $supplier) 
-        {
+    {
         $exists = User::where("api_token",$_token)->get();
         if(count($exists) > 0)
         {
@@ -299,6 +335,112 @@ Route::any('/', function() {
 			$track->addChild('unit_price',$product->unit_price);
 			$track->addChild('reorder_qty',$product->reorder_qty);
         }
+        Header('Content-type: text/xml');
+		return $xml->asXML();
+        }
+        else
+        {
+    	$xml = new SimpleXMLElement('<xml/>');
+		$xml->addChild("supplier",null);
+		$xml->addChild('message','Invalid api token');
+		$xml->addChild('status','Error');
+        Header('Content-type: text/xml');
+		return $xml->asXML();
+		}
+    }
+
+
+    function getProductsOfCats($_token, $name)
+    {
+    	$exists = User::where("api_token",$_token)->get();
+        if(count($exists) > 0)
+        {
+        $xml = new SimpleXMLElement('<xml/>');
+		$xml->addChild('message','Successfully retrieved all products of these categories');
+		$xml->addChild('status','Successful');
+		$prodCats = ProductCategory::where('category_name',$name)->get();
+		if(count($prodCats) != 0) 
+		{
+			foreach($prodCats as $prodCat)
+			{
+				$cats = $xml->addChild('category');
+				$cats->addChild('id',$prodCat->id);
+	            $cats->addChild('category_name',$prodCat->category_name);
+	          	$products = $prodCat->products;
+	          	if(count($products) != 0)
+	            {
+	            	foreach($products as $product)
+	            	{
+		           		$prod = $cats->addChild('product');
+		           		$prod->addChild('id',$product->id);
+						$prod->addChild('product_name',$product->prod_name);
+						$prod->addChild('product_description', $product->prod_desc);
+						$prod->addChild('unit_price',$product->unit_price);
+						$prod->addChild('reorder_qty',$product->reorder_qty);
+					}
+	        	}
+	        	else
+	        	{
+	            	$prod = $cats->addChild('product');
+	        	}
+
+			}
+		}
+		else
+		{
+			$cats = $xml->addChild('category');
+		}
+        Header('Content-type: text/xml');
+		return $xml->asXML();
+        }
+        else
+        {
+    	$xml = new SimpleXMLElement('<xml/>');
+		$xml->addChild("supplier",null);
+		$xml->addChild('message','Invalid api token');
+		$xml->addChild('status','Error');
+        Header('Content-type: text/xml');
+		return $xml->asXML();
+		}
+    }
+
+    function getProductsOfCat($_token, $id)
+    {
+    	$exists = User::where("api_token",$_token)->get();
+        if(count($exists) > 0)
+        {
+        $xml = new SimpleXMLElement('<xml/>');
+		$xml->addChild('message','Successfully retrieved all product of the category');
+		$xml->addChild('status','Successful');
+		$prodCat = ProductCategory::find($id);
+		// return $prodCat;
+		if($prodCat)
+		{
+			$cats = $xml->addChild('category');
+			$cats->addChild('id',$prodCat->id);
+            $cats->addChild('category_name',$prodCat->category_name);
+          	$products = $prodCat->products;
+          	if(count($products) != 0)
+            {
+            	foreach($products as $product)
+            	{
+	           		$prod = $cats->addChild('product');
+	           		$prod->addChild('id',$product->id);
+					$prod->addChild('product_name',$product->prod_name);
+					$prod->addChild('product_description', $product->prod_desc);
+					$prod->addChild('unit_price',$product->unit_price);
+					$prod->addChild('reorder_qty',$product->reorder_qty);
+				}
+        	}
+        	else
+        	{
+            	$prod = $cats->addChild('product');
+        	}
+		}
+		else
+		{
+			$cats = $xml->addChild('category');
+		}
         Header('Content-type: text/xml');
 		return $xml->asXML();
         }
