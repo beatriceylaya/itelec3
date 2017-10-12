@@ -13,4 +13,9 @@ class Product extends Model
    	{
    		return $this->belongsTo('App\ProductCategory','pc_id','id');
    	}
+
+   	public function suppliers()
+   	{
+   		return $this->belongsToMany('App\Supplier','suppliers_product','prod_id','supp_id')->wherePivot('status','active')->withTimeStamps();
+   	}
 }

@@ -12,6 +12,8 @@ use \SoapServer;
 use WSDL\XML\Styles\DocumentLiteralWrapped;
 use WSDL\XML\Styles\RpcEncoded;
 use nusoap_client;
+use App\Supplier;
+use App\Product;
 
 class ClientController extends Controller
 {
@@ -82,6 +84,25 @@ class ClientController extends Controller
         $client->decode_utf8 = false;           
         $client->soap_defencoding = 'utf-8';
         $result = $client->call("getAllProductCategory",array('_token' => 'hIkHWxcacsy4ZRYFYKVLvyVIotpUg4sTlBvliXHHcPyIL85JQ6pjpM02dKqp'));
+
+        $error = $client->getError();
+        if($error)
+        {
+            return $error;
+            
+        }
+        else
+        {
+        return $result;
+        }
+    }
+
+    public function getSupplierProducts() {
+        $client = new nusoap_client("http://localhost/itelec3/public/index.php?wsdl", true);
+        $client->encode_utf8 = false;
+        $client->decode_utf8 = false;           
+        $client->soap_defencoding = 'utf-8';
+        $result = $client->call("getProductFromSupplier",array('_token' => 'hIkHWxcacsy4ZRYFYKVLvyVIotpUg4sTlBvliXHHcPyIL85JQ6pjpM02dKqp','supplier' => '1'));
 
         $error = $client->getError();
         if($error)

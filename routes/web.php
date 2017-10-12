@@ -138,6 +138,24 @@ Route::any('/', function() {
 		    'Get all Suppliers'
     );
 
+	$server->register(
+		    // method name:
+		    'getProductFromSupplier',
+		    // parameter list:
+		    array('_token' => 'xsd:string','supplier' => 'xsd:string'),
+		    // return value(s):
+		    array('result'=>'xsd:string'),
+		    // namespace:
+		    url('/'),
+		    // soapaction: (use default)
+		    false,
+		    // style: rpc or document
+		    'rpc',
+		    // use: encoded or literal
+		    'encoded',
+		    'Get all Suppliers'
+    );
+
 	function getAccount($id)
 	{
 		$xml = new SimpleXMLElement('<xml/>');
@@ -231,7 +249,7 @@ Route::any('/', function() {
 
  	}
 
-        function getAllProductCategory($_token) 
+    function getAllProductCategory($_token) 
         {
         $exists = User::where("api_token",$_token)->get();
         if(count($exists) > 0)
@@ -255,8 +273,48 @@ Route::any('/', function() {
         Header('Content-type: text/xml');
 		return $xml->asXML();
 		}
+    }
+      
+    function getProductFromSupplier($_token, $supplier) 
+        {
+        $exists = User::where("api_token",$_token)->get();
+        if(count($exists) > 0)
+        {
+        $xml = new SimpleXMLElement('<xml/>');
+		$xml->addChild('message','Successfully retrieved all product categories');
+		$xml->addChild('status','Successful');
+		$supplier = Supplier::find($supplier);
+
+		$suppliertr = $xml->addChild('supplier');
+		$suppliertr->addChild('id',$supplier->id);
+		$suppliertr->addChild('supplier_name',$supplier->supplier_name);
+		$supplier_products = $supplier->products;
+
+        foreach($supplier_products  as $product)
+        {
+        	$track = $xml->addChild('product');
+           	$track->addChild('id',$product->id);
+			$track->addChild('product_name',$product->prod_name);
+			$track->addChild('product_description', $product->prod_desc);
+			$track->addChild('unit_price',$product->unit_price);
+			$track->addChild('reorder_qty',$product->reorder_qty);
         }
-        
+        Header('Content-type: text/xml');
+		return $xml->asXML();
+        }
+        else
+        {
+    	$xml = new SimpleXMLElement('<xml/>');
+		$xml->addChild("supplier",null);
+		$xml->addChild('message','Invalid api token');
+		$xml->addChild('status','Error');
+        Header('Content-type: text/xml');
+		return $xml->asXML();
+		}
+    }
+
+
+
 	    $rawPostData = file_get_contents("php://input");
 	    return \Response::make($server->service($rawPostData), 200, array('Content-Type' => 'text/xml; charset=ISO-8859-1'));
  	
