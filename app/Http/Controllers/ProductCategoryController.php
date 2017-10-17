@@ -93,4 +93,10 @@ class ProductCategoryController extends Controller
 
         return response()->json(null, 204);
     }
+
+    public function searchProductCategory(Request $request) {
+        $category = ProductCategory::where('category_name', 'LIKE', '%'.$request['category'].'%');
+
+        return response()->json($category);
+    }
 }

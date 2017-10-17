@@ -17,23 +17,22 @@ Route::group(['middleware' => 'auth:api'], function () {
 	//Supplier
     Route::get('suppliers', 'SupplierController@index');
     Route::get('suppliers/{id}', 'SupplierController@show');
-    Route::post('suppliers', 'SupplierController@store');
-    Route::put('suppliers/{id}', 'SupplierController@update');
-    Route::delete('suppliers/{id}', 'SupplierController@delete');
+    Route::get('suppliers/{supplier}', 'SupplierController@searchSupplier');
 
     //Product
     Route::get('products', 'ProductController@index');
     Route::get('products/{id}', 'ProductController@show');
-    Route::post('products', 'ProductController@store');
-    Route::put('products/{id}', 'ProductController@update');
-    Route::delete('products/{id}', 'ProductController@delete');
+    Route::get('products/{product}', 'ProductController@searchProduct')
+    
 
     //Product Category
     Route::get('product/category', 'ProductCategoryController@index');
     Route::get('products/category/{id}', 'ProductCategoryController@show');
-    Route::post('products/category', 'ProductCategoryController@store');
-    Route::put('products/category/{id}', 'ProductCategoryController@update');
-    Route::delete('products/category/{id}', 'ProductCategoryController@delete');
+    Route::get('products/category/{category}', 'ProductCategoryController@searchProductCategory');
+
+    //Suppliers Product
+    Route::get('supplier/products/{id}', 'SuppliersProductController@index');
+   
 });
 
 Route::group(['prefix' => 'soap'], function () {
