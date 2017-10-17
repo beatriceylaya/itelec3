@@ -50,8 +50,9 @@ class ProductCategoryController extends Controller
     public function show($id)
     {
         $category = ProductCategory::findOrFail($id);
+        $product = $category->products();
 
-        return $category;
+        return $product;
     }
 
     /**

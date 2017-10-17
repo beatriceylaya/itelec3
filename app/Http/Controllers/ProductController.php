@@ -93,6 +93,14 @@ class ProductController extends Controller
     public function searchProduct(Request $request) {
 
         $product = Product::where('prod_name', 'LIKE', '%'.$request['product'].'%')->get();
+        if(count($supplier) == 0) {
+            $supp[]= 'No supplier found.';
+        }
+        else {
+            foreach($supplier as $key => $value) {
+                $supp[] = $value;
+            }
+        }
 
         return response()->json($product);
     }

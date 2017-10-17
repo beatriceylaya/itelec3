@@ -97,8 +97,15 @@ class SupplierController extends Controller
 
     public function searchSupplier(Request $request) {
         $supplier = Supplier::where('supplier_name','LIKE', '%'.$request['name'].'%')->get();
-
-        return response()->json($supplier);
+        if(count($supplier) == 0) {
+            $supp[]= 'No supplier found.';
+        }
+        else {
+            foreach($supplier as $key => $value) {
+                $supp[] = $value;
+            }
+        }
+        return response()->json($supp);
     }
 
 }

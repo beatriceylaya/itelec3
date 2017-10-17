@@ -40,9 +40,7 @@ class SuppliersProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = Product::create($request->all());
-
-        return response()->json($product, 201);
+       
     }
 
     /**
@@ -53,7 +51,7 @@ class SuppliersProductController extends Controller
      */
     public function show(Product $product)
     {
-        return $product;
+        
     }
 
     /**
@@ -76,9 +74,9 @@ class SuppliersProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $product->update($request->all());
+        // $product->update($request->all());
 
-        return response()->json($product,200);
+        // return response()->json($product,200);
     }
 
     /**
@@ -89,15 +87,22 @@ class SuppliersProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
+        // $product->delete();
 
-        return response()->json(null, 204);
+        // return response()->json(null, 204);
     }
 
     public function searchProduct(Request $request) {
 
-        $product = Product::where('prod_name', 'LIKE', '%'.$request['product'].'%')->get();
-
-        return response()->json($product);
+        $sproduct = Product::where('prod_name', 'LIKE', '%'.$request['product'].'%')->get();
+        if(count($product) == 0) {
+            $sp[]= 'No supplier found.';
+        }
+        else {
+            foreach($product as $key => $value) {
+                $sp[] = $value;
+            }
+        }
+        return response()->json($prod);
     }
 }
