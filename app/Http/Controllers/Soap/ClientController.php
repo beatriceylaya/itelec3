@@ -42,11 +42,6 @@ class ClientController extends Controller
     }
 
     public function getSuppliers() {
-		$client = new nusoap_client("http://localhost/itelec3/public/index.php?wsdl", true);
-        $client->encode_utf8 = false;
-        $client->decode_utf8 = false;           
-        $client->soap_defencoding = 'utf-8';
-        $result = $client->call("getAllSuppliers",array('_token' => 'hIkHWxcacsy4ZRYFYKVLvyVIotpUg4sTlBvliXHHcPyIL85JQ6pjpM02dKqp'));
 
         $error = $client->getError();
         if($error)
@@ -98,12 +93,12 @@ class ClientController extends Controller
         }
     }
 
-    public function getSupplierProducts() {
+    public function getSupplierProducts(Request $request) {
         $client = new nusoap_client("http://localhost/itelec3/public/index.php?wsdl", true);
         $client->encode_utf8 = false;
         $client->decode_utf8 = false;           
         $client->soap_defencoding = 'utf-8';
-        $result = $client->call("getProductFromSupplier",array('_token' => 'hIkHWxcacsy4ZRYFYKVLvyVIotpUg4sTlBvliXHHcPyIL85JQ6pjpM02dKqp','supplier' => '1'));
+        $result = $client->call("getProductFromSupplier",array('_token' => 'hIkHWxcacsy4ZRYFYKVLvyVIotpUg4sTlBvliXHHcPyIL85JQ6pjpM02dKqp','supplier' => $request->input('supplier')));
 
         $error = $client->getError();
         if($error)

@@ -317,7 +317,7 @@ Route::any('/', function() {
         if(count($exists) > 0)
         {
         $xml = new SimpleXMLElement('<xml/>');
-		$xml->addChild('message','Successfully retrieved all product categories');
+		$xml->addChild('message','Successfully retrieved all product given the supplier id');
 		$xml->addChild('status','Successful');
 		$supplier = Supplier::find($supplier);
 
@@ -463,3 +463,5 @@ Route::any('/', function() {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/json', 'HomeController@jsonPage');
+Route::get('/soap','HomeController@soapPage');

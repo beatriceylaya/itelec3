@@ -46,8 +46,10 @@ Route::group(['prefix' => 'soap'], function () {
     Route::get('/product_categories','Soap\ClientController@getProductCategories');
     Route::get('/suppliers_product','Soap\ClientController@getSupplierProducts');
 
-    //get products from the category name eg. /products/category='Milk'
+    //get products from the category name eg. /products/category='Milk' `
     Route::get('/products/category','Soap\ClientController@getProductsFromCategories');
     Route::get('/products/category/{category}','Soap\ClientController@getProductsOfCategory');
+
+    
 
 });

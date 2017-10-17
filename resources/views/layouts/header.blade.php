@@ -9,8 +9,8 @@
             </h1>
         </div><!--//branding-->
         <ol class="breadcrumb">
-            <li><a href="#">Home</a></li>
-            <li class="active">Quick Start</li>
+            <li class=""><a href="{{url('/json')}}">JSON</a></li>
+            <li class=""><a href="{{url('/soap')}}">SOAP</a></li>
         </ol>
     </div><!--//container-->
 </header><!--//header-->
